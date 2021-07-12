@@ -5,7 +5,7 @@ services:
       context: ./src/books-service
       dockerfile: ./Dockerfile
     restart: on-failure
-    command: '/bin/sh -c 'while true; do sleep 1; done'
+    command: /bin/sh -c 'while true; do sleep 1; done'
     volumes:
       - golang_vol:/usr/src/app/
     networks:
