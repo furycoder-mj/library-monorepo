@@ -7,40 +7,50 @@ pipeline {
         // GO114MODULE = 'on'
         // CGO_ENABLED = 0 
         // GOPATH = "${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_ID}"
-        registry = "mihiratdocker/jenkins_golang_hello_world_pipeline" 
-        registryCredential = 'dockerhub_id' 
+        // registry = "mihiratdocker/jenkins_golang_hello_world_pipeline" 
+        // registryCredential = 'dockerhub_id' 
         dockerImage = ''
     }
     stages {      
         stage('Cloning git repo') {
             steps{
-                git branch: 'main', url: 'https://github.com/furycoder-mj/Jenkins-setup-test.git'
+                git branch: 'main', credentialsId: 'personal_git_ssh', url: 'git@github.com:furycoder-mj/library-monorepo.git'
             }
         }
-        stage('Building our image') {
+        stage('Testing all services') {
+            //run docker compose for compose.test file
+            // make test
             steps{
-                script{
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
-                }
+                sh 'make test'
+                // script{
+                //     dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                // }
             }
         }
-        stage('Push our image') {
-            steps{
-                script{
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push('latest')
-                    } 
-                }
-            }
-        }
-        stage('Deploy our image'){
-            steps{
-                sh 'docker container rm -f testDeployment'
-                script{
-                    containerId = docker.image('mihiratdocker/jenkins_golang_hello_world_pipeline:6').run('-p 8001:8001 --name testDeployment')
-                }
-            }  
-        }
+        // stage('Building our image') {
+        //     steps{
+        //         script{
+        //             dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+        //         }
+        //     }
+        // }
+        // stage('Push our image') {
+        //     steps{
+        //         script{
+        //             docker.withRegistry( '', registryCredential ) {
+        //                 dockerImage.push('latest')
+        //             } 
+        //         }
+        //     }
+        // }
+        // stage('Deploy our image'){
+        //     steps{
+        //         sh 'docker container rm -f testDeployment'
+        //         script{
+        //             containerId = docker.image('mihiratdocker/jenkins_golang_hello_world_pipeline:6').run('-p 8001:8001 --name testDeployment')
+        //         }
+        //     }  
+        // }
         // stage('Pre Test') {
         //     steps {
         //         echo 'Installing dependencies'
