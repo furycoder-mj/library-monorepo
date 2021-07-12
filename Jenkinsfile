@@ -1,0 +1,82 @@
+pipeline {
+    agent any
+    // tools {
+    //     go 'go1.16.5'
+    // }
+    environment {
+        // GO114MODULE = 'on'
+        // CGO_ENABLED = 0 
+        // GOPATH = "${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_ID}"
+        registry = "mihiratdocker/jenkins_golang_hello_world_pipeline" 
+        registryCredential = 'dockerhub_id' 
+        dockerImage = ''
+    }
+    stages {      
+        stage('Cloning git repo') {
+            steps{
+                git branch: 'main', url: 'https://github.com/furycoder-mj/Jenkins-setup-test.git'
+            }
+        }
+        stage('Building our image') {
+            steps{
+                script{
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                }
+            }
+        }
+        stage('Push our image') {
+            steps{
+                script{
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push('latest')
+                    } 
+                }
+            }
+        }
+        stage('Deploy our image'){
+            steps{
+                sh 'docker container rm -f testDeployment'
+                script{
+                    containerId = docker.image('mihiratdocker/jenkins_golang_hello_world_pipeline:6').run('-p 8001:8001 --name testDeployment')
+                }
+            }  
+        }
+        // stage('Pre Test') {
+        //     steps {
+        //         echo 'Installing dependencies'
+        //         sh 'go version'
+        //         sh 'go get -u golang.org/x/lint/golint'
+        //     }
+        // }
+        
+        // stage('Build') {
+        //     steps {
+        //         echo 'Compiling and building'
+        //         sh 'go build'
+        //     }
+        // }
+
+        // stage('Test') {
+        //     steps {
+        //         withEnv(["PATH+GO=${GOPATH}/bin"]){
+        //             echo 'Running vetting'
+        //             sh 'go vet .'
+        //             echo 'Running linting'
+        //             sh 'golint .'
+        //             echo 'Running test'
+        //             sh 'cd test && go test -v'
+        //         }
+        //     }
+        // }
+        
+    }
+    // post {
+    //     always {
+    //         emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
+    //             recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+    //             to: "${params.RECIPIENTS}",
+    //             subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+            
+    //     }
+    // }  
+}
