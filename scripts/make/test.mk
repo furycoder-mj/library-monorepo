@@ -8,7 +8,7 @@ start-test:build-test ## Build and start docker containers (test)
 	docker container ls -la
 
 exec-test: ## Execute test suite
-	winpty docker-compose -f  -t docker-compose.test.yml exec books_service_test go test -v -race -coverprofile=/tmp/coverage.out ./...
+	docker-compose -f docker-compose.test.yml exec books_service_test gotest -v -race -coverprofile=/tmp/coverage.out ./...
 	# docker-compose -f docker-compose.test.yml exec nodejs_test ng lint
 	# docker-compose -f docker-compose.test.yml exec nodejs_test ng test
 
