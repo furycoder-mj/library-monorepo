@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 )
 
 func handleHello(w http.ResponseWriter, r *http.Request) {
@@ -14,11 +15,23 @@ func handleHello(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusBadRequest)
 }
+func startServer(wg *sync.WaitGroup) *http.Server {
+	nonTlsSrv := &http.Server{Addr: ":" + os.Getenv("Port")}
+	http.HandleFunc(os.Getenv("BasePath")+"/", handleHello)
+	go func() {
+		defer wg.Done() // let main know we are done cleaning up
+
+		// always returns error. ErrServerClosed on graceful close
+		if err := nonTlsSrv.ListenAndServe(); err != http.ErrServerClosed {
+			// unexpected error. port in use?
+			log.Fatalf("ListenAndServe(): %v", err)
+		}
+	}()
+	return nonTlsSrv
+}
 func main() {
-	helloHandler := http.HandlerFunc(handleHello)
-	http.Handle(os.Getenv("BasePath")+"/", helloHandler)
-	err := http.ListenAndServe(":"+os.Getenv("Port"), nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	httpServerExitDone := &sync.WaitGroup{}
+	httpServerExitDone.Add(1)
+	_ = startServer(httpServerExitDone)
+	httpServerExitDone.Wait()
 }
