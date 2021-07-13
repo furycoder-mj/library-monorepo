@@ -39,7 +39,7 @@ func TestStartServer(t *testing.T) {
 		r    *http.Request
 	}{
 		{name: "Pass", r: newreq("GET", "http://localhost:5000/books", nil)},
-		{name: "Fail", r: newreq("POST", "http://localhost:5000/books", nil)},
+		{name: "Fail", r: newreq("GET", "http://localhost:5000/books", nil)},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
