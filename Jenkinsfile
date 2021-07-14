@@ -30,9 +30,7 @@ pipeline {
     }
     post {
         failure {
-            steps{
-                sh 'make clean-test'
-            }            
+            sh 'make clean-test'           
         }
     }
         // stage('Building our image') {
