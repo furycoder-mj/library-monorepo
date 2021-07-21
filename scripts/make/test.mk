@@ -5,7 +5,7 @@ build-test: ## Build docker image (test)
 
 start-test:build-test ## Build and start docker containers (test)
 	docker-compose -f docker-compose.test.yml up -d
-	# docker container ls -la
+	docker container ls -la
 
 exec-test: ## Execute test suite
 	docker-compose -f docker-compose.test.yml exec -T books_service_test go test -v -vet=off -coverprofile=/tmp/coverage.out ./...
