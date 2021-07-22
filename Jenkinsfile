@@ -21,7 +21,7 @@ pipeline {
             steps{
                 script{
                     CHANGED_SERVICES_STR = sh (
-                        script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | sed -e ":a" -e "N" -e "$!ba" -e "s/\n/,/g" | tr "-" "_" ',
+                        script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | tr "\n" "," | tr "-" "_" ',
                         returnStdout: true
                     ).trim()
                     CHANGED_SERVICES_LIST = CHANGED_SERVICES_STR.split(',')
