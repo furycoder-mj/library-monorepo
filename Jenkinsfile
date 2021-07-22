@@ -47,7 +47,7 @@ pipeline {
     }
     post {
         failure {
-            sh 'make clean-test'           
+            sh 'make final-clean-test'           
         }
     }
         // stage('Building our image') {
