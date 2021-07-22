@@ -17,6 +17,18 @@ pipeline {
                 git branch: 'main', credentialsId: 'personal_git_ssh', url: 'git@github.com:furycoder-mj/library-monorepo.git'
             }
         }
+        stage('Finding changed services'){
+            steps{
+                script{
+                    CHANGED_SERVICES = sh (
+                        script: "git diff --dirstat=files,0 HEAD~1 | sed -E 's/^[ 0-9.]+% //g' | sed -n '/src\//p' |sed -E 's/src\///g' | sed -E 's/\/.*$//g' | tr '\n' ' ",
+                        returnStdout: true
+                    ).trim()
+                    def values = CHANGED_SERVICES.split(' ')
+                    echo values
+                }
+            }
+        }
         stage('Testing all services') {
             //run docker compose for compose.test file
             // make test
