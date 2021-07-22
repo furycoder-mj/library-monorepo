@@ -35,8 +35,8 @@ pipeline {
             steps{
                 script{
                     CHANGED_SERVICES_LIST.each {                         
-                            echo "Item: ${it}"    
-                            // sh "make test service=${it}"
+                            echo "Running test suite for service: ${it}"    
+                            sh "make test service=${it}"
                         }
                 }
                 // script{
