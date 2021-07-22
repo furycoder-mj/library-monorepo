@@ -18,7 +18,7 @@ stop-test: ## Stop docker containers (test)
 clean-test: stop-test ## Stop docker containers, clean data and workspace (test)
 	docker-compose -f docker-compose.test.yml rm -v
 
-final-clean-test: stop-test ## Stop docker containers, clean data and workspace (test)
+final-clean-test: ## Stop docker containers, clean data and workspace (test)
 	docker-compose -f docker-compose.test.yml down -v --remove-orphans --rmi all
 
 test: start-test exec-test final-clean-test ## Run test suite
