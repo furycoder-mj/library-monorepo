@@ -10,6 +10,17 @@ services:
       - golang_vol:/usr/src/app/
     networks:
       - monorepo_net
+  users_service_test:
+    build:
+      context: ./src/books-service
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    command: /bin/sh -c 'while true; do sleep 1; done'
+    volumes:
+      - golang_vol:/usr/src/app/
+    networks:
+      - monorepo_net
+
 #   nodejs_test:
 #     build:
 #       context: ./nodejs

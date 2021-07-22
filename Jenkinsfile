@@ -11,7 +11,7 @@ pipeline {
         // registryCredential = 'dockerhub_id' 
         dockerImage = ''
         CHANGED_SERVICES_STR = ''
-        CHANGED_SERVICES_LIST = []
+        // CHANGED_SERVICES_LIST = []
     }
     stages {      
         stage('Cloning git repo') {
@@ -23,11 +23,11 @@ pipeline {
             steps{
                 script{
                     CHANGED_SERVICES_STR = sh (
-                        script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | tr "\\n" " " ',
+                        script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | sed -e ":a" -e "N" -e "$!ba" -e "s/\\n/,/g" | tr "-" "_" ',
                         returnStdout: true
                     ).trim()
-                    CHANGED_SERVICES_LIST = CHANGED_SERVICES_STR.split(' ')
-                    echo "changes found in services - ${CHANGED_SERVICES_LIST}"
+                    // CHANGED_SERVICES_LIST = CHANGED_SERVICES_STR.split(' ')
+                    // echo "changes found in services - ${CHANGED_SERVICES_LIST}"
                 }
             }
         }
@@ -35,7 +35,12 @@ pipeline {
             //run docker compose for compose.test file
             // make test
             steps{
-                sh "make test service=${CHANGED_SERVICES_LIST[0]}"
+                script{
+                    CHANGED_SERVICES_STR.tokenize(',').each {     
+                            sh "make test service=${it}"
+                            // println "Item: ${it}"
+                        }
+                }
                 // script{
                 //     dockerImage = docker.build registry + ":$BUILD_NUMBER" 
                 // }
