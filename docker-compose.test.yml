@@ -12,7 +12,7 @@ services:
       - monorepo_net
   users_service_test:
     build:
-      context: ./src/books-service
+      context: ./src/users-service
       dockerfile: ./Dockerfile
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
