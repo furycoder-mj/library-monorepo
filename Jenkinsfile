@@ -24,8 +24,9 @@ pipeline {
                         script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | tr "\\n" " " ',
                         returnStdout: true
                     ).trim()
-                    def values = CHANGED_SERVICES.split(' ')
-                    echo values
+                    echo "${CHANGED_SERVICES}"
+                    // def values = CHANGED_SERVICES.split(' ')
+                    // echo values
                 }
             }
         }
