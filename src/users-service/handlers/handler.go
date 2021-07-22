@@ -1,7 +1,5 @@
 package handlers
 
-import "fmt"
-
 func test() {
-	fmt.Println("hello world")
+	// fmt.Println("hello world")
 }
