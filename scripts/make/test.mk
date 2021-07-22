@@ -4,7 +4,7 @@ build-test: ## Build docker image (test)
 	docker-compose -f docker-compose.test.yml build
 
 start-test:build-test ## Build and start docker containers (test)
-	docker-compose -f docker-compose.test.yml up $(service)_test -d
+	docker-compose -f docker-compose.test.yml up -d $(service)_test 
 	docker container ls -la
 
 exec-test: ## Execute test suite
