@@ -38,7 +38,7 @@ pipeline {
                 script{
                     CHANGED_SERVICES_STR.tokenize(',').each {     
                             sh "make test service=${it}"
-                            // println "Item: ${it}"
+                            println "Item: ${it}"
                         }
                 }
                 // script{
