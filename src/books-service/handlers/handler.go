@@ -1,5 +1,7 @@
 package handlers
 
-func test() {
+import "fmt"
 
+func test() {
+	fmt.Println("hello")
 }
