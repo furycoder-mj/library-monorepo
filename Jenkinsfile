@@ -10,6 +10,8 @@ pipeline {
         // registry = "mihiratdocker/jenkins_golang_hello_world_pipeline" 
         // registryCredential = 'dockerhub_id' 
         dockerImage = ''
+        CHANGED_SERVICES_STR = ''
+        CHANGED_SERVICES_LIST = []
     }
     stages {      
         stage('Cloning git repo') {
@@ -20,13 +22,12 @@ pipeline {
         stage('Finding changed services'){
             steps{
                 script{
-                    def CHANGED_SERVICES = sh (
+                    CHANGED_SERVICES_STR = sh (
                         script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | tr "\\n" " " ',
                         returnStdout: true
                     ).trim()
-                    echo "${CHANGED_SERVICES}"
-                    def values = CHANGED_SERVICES.split(' ')
-                    echo "${values}"
+                    CHANGED_SERVICES_LIST = CHANGED_SERVICES_STR.split(' ')
+                    echo "changes found in services - ${CHANGED_SERVICES_LIST}"
                 }
             }
         }
@@ -34,7 +35,7 @@ pipeline {
             //run docker compose for compose.test file
             // make test
             steps{
-                sh 'make test'
+                sh "make test service=${CHANGED_SERVICES_LIST[0]}"
                 // script{
                 //     dockerImage = docker.build registry + ":$BUILD_NUMBER" 
                 // }
