@@ -38,7 +38,7 @@ pipeline {
                         parameters: [string(name: 'service-name', value: it)]
                         testResult.put(it, result)
                     }
-                    echo '${testResult}'
+                    echo testResult
                 }
             }
         }
