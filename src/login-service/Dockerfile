@@ -12,9 +12,8 @@ ADD . /app
 ## any further commands inside our /app
 ## directory
 WORKDIR /app
-# adding env variables
-ENV Port=5000
-ENV BasePath=/books
+
+ENV Port=5003
 
 ## we run go build to compile the binary
 ## executable of our Go program
@@ -23,4 +22,4 @@ RUN go build -o main .
 ## our newly created binary executable
 CMD ["/app/main"]
 
-EXPOSE 5000
+EXPOSE 5003

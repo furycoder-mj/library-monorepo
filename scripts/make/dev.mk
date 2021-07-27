@@ -1,16 +1,18 @@
-.PHONY: status logs start stop clean
+.PHONY: status logs start-dev stop-dev clean-dev 
 
 status: ## Get status of containers
 	docker-compose ps
 
 logs: ## Get logs of containers
 	docker-compose logs --tail=0 --follow
+	
+start-dev: ## Build and start docker container
+	docker-compose -f docker-compose.dev.yml up -d $(service)
 
-start:build ## Build and start docker containers
-	docker-compose up -d
+stop-dev: ## Stop docker container
+	docker-compose -f docker-compose.dev.yml stop $(service)
 
-stop: ## Stop docker containers
-	docker-compose stop
+clean-dev: stop-dev ## Stop docker containers, clean data and workspace (test)
+	docker-compose -f docker-compose.dev.yml rm -f -s -v $(service)
 
-clean:stop ## Stop docker containers, clean data and workspace
-	docker-compose down -v --remove-orphans
+

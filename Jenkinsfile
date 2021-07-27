@@ -30,18 +30,14 @@ pipeline {
             }
         }
         stage('Testing all services') {
-            //run docker compose for compose.test file
-            // make test
             steps{
-                script{
-                    CHANGED_SERVICES_LIST.each {                         
-                            echo "Running test suite for service: ${it}"    
-                            sh "make test service=${it}"
-                        }
+                def testResult = []
+                CHANGED_SERVICES_LIST.each {
+                    def result = build propagate: false, job: 'LibraryTest',
+                     parameters: [string(name: 'service-name', value: '${it}')]
+                    testResult['${it}'] = result
                 }
-                // script{
-                //     dockerImage = docker.build registry + ":$BUILD_NUMBER" 
-                // }
+                echo '${testResult}'
             }
         }
     }

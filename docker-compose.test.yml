@@ -7,7 +7,7 @@ services:
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     volumes:
-      - golang_vol:/usr/src/app/
+      - books_vol:/usr/src/app/
     networks:
       - monorepo_net
   users_service_test:
@@ -17,7 +17,27 @@ services:
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     volumes:
-      - golang_vol:/usr/src/app/
+      - users_vol:/usr/src/app/
+    networks:
+      - monorepo_net
+  library_service_test:
+    build:
+      context: ./src/library-service
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    command: /bin/sh -c 'while true; do sleep 1; done'
+    volumes:
+      - library_vol:/usr/src/app/
+    networks:
+      - monorepo_net
+  login_service_test:
+    build:
+      context: ./src/login-service
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    command: /bin/sh -c 'while true; do sleep 1; done'
+    volumes:
+      - login_vol:/usr/src/app/
     networks:
       - monorepo_net
 
@@ -34,7 +54,11 @@ services:
 #       - monorepo_net
 
 volumes:
-  golang_vol:
+  books_vol:
+  users_vol:
+  library_vol:
+  login_vol:
+
 #   nodejs_vol:
 
 networks:

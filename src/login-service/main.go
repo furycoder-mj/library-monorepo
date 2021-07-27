@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"epam.com/web-services/library-management/books-service/handlers"
+	"epam.com/web-services/library-management/login-service/handlers"
 )
 
 func main() {
