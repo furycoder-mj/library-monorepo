@@ -4,6 +4,7 @@ services:
     build:
       context: ./src/books-service
       dockerfile: ./Dockerfile
+      image: mihiratdocker/library_books_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
@@ -14,6 +15,7 @@ services:
     build:
       context: ./src/users-service
       dockerfile: ./Dockerfile
+      image: mihiratdocker/library_users_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
@@ -24,6 +26,7 @@ services:
     build:
       context: ./src/library-service
       dockerfile: ./Dockerfile
+      image: mihiratdocker/library_library_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
@@ -34,6 +37,7 @@ services:
     build:
       context: ./src/login-service
       dockerfile: ./Dockerfile
+      image: mihiratdocker/library_login_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:

@@ -36,9 +36,9 @@ pipeline {
                     CHANGED_SERVICES_LIST.each {
                         def result = build propagate: false, job: 'LibraryTest',
                         parameters: [string(name: 'service-name', value: it)]
-                        testResult.put(it, result)
+                        testResult.put(it, result.result)
                     }
-                    echo testResult
+                    echo "${testResult}"
                 }
             }
         }
