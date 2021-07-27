@@ -21,7 +21,7 @@ pipeline {
             steps{
                 script{
                     CHANGED_SERVICES_STR = sh (
-                        script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | sed \':a;N;$!ba;s/\\n/,/g\' | tr "-" "_" ',
+                        script: 'git diff --dirstat=files,0 HEAD~1 | sed -E "s/^[ 0-9.]+% //g" | sed -n "/src\\//p" |sed -E "s/src\\///g" | sed -E "s/\\/.*$//g" | sort | uniq | sed \':a;N;$!ba;s/\\n/,/g\' | tr "-" "_" ',
                         returnStdout: true
                     ).trim()
                     CHANGED_SERVICES_LIST = CHANGED_SERVICES_STR.split(',')
@@ -31,13 +31,15 @@ pipeline {
         }
         stage('Testing all services') {
             steps{
-                def testResult = []
-                CHANGED_SERVICES_LIST.each {
-                    def result = build propagate: false, job: 'LibraryTest',
-                     parameters: [string(name: 'service-name', value: '${it}')]
-                    testResult['${it}'] = result
+                script{
+                    def testResult = [:]
+                    CHANGED_SERVICES_LIST.each {
+                        def result = build propagate: false, job: 'LibraryTest',
+                        parameters: [string(name: 'service-name', value: it)]
+                        testResult.put(it, result)
+                    }
+                    echo '${testResult}'
                 }
-                echo '${testResult}'
             }
         }
     }

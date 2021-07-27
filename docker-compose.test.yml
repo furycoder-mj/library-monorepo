@@ -53,11 +53,11 @@ services:
 #     networks:
 #       - monorepo_net
 
-volumes:
-  books_vol:
-  users_vol:
-  library_vol:
-  login_vol:
+# volumes:
+#   books_vol:
+#   users_vol:
+#   library_vol:
+#   login_vol:
 
 #   nodejs_vol:
 
