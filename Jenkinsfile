@@ -1,12 +1,8 @@
 def testResult = [:]
 def pushResult = [:]
+def deployResult = [:]
 pipeline {
     agent any
-    environment {
-        baseRegistry = "mihiratdocker/library_" 
-        registryCredential = 'dockerhub_id' 
-        dockerImage = ''
-    }
     stages {      
         stage('Cloning git repo') {
             steps{
@@ -25,7 +21,7 @@ pipeline {
                 }
             }
         }
-        stage('Testing all services') {
+        stage('Testing changed services') {
             steps{
                 script{
                     CHANGED_SERVICES_LIST.each {
@@ -44,7 +40,7 @@ pipeline {
                         if (testStatus == 'SUCCESS'){
                             def pResult = build propagate: false, job: 'LibraryBuildAndPush',
                                             parameters: [string(name: 'service', value: service)]
-                                                pushResult.put(it, pResult.result)
+                                                pushResult.put(service, pResult.result)
                         }
                     }
                     echo "${pushResult}"
@@ -54,9 +50,11 @@ pipeline {
         stage('Deploy services') {
             steps{
                 script{
-                    testResult.each { service, testStatus ->
-                        if (testStatus == 'SUCCESS'){                            
-                            sh "make start-dev service=${service}"
+                    pushResult.each { service, pushStatus ->
+                        if (pushStatus == 'SUCCESS'){                            
+                            def dResult = build propagate: false, job: 'LibraryDeploy',
+                                            parameters: [string(name: 'service', value: service)]
+                                                deployResult.put(service, dResult.result)
                         }
                     }
                 }

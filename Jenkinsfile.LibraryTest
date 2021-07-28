@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    stages {      
+        stage('Cloning git repo') {
+            steps{
+                git branch: 'main', credentialsId: 'personal_git_ssh', url: 'git@github.com:furycoder-mj/library-monorepo.git'
+            }
+        }
+        stage('Testing service') {
+            steps{
+                script{
+                    echo "Running test suite for service: ${params['service-name']}"
+                    sh "make test service=${params['service-name']}"
+                }
+            }
+        }
+    }
+}

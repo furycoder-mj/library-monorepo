@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {      
+        stage('Cloning git repo') {
+            steps{
+                git branch: 'main', credentialsId: 'personal_git_ssh', url: 'git@github.com:furycoder-mj/library-monorepo.git'
+            }
+        }
+        stage('Build And Push service') {
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub_id', passwordVariable: 'password', usernameVariable: 'username')]) {
+                        sh "docker login -u ${username} -p ${password}"
+                    }
+                    sh "docker-compose -f docker-compose.dev.yml build -q ${service}"
+                    sh "docker-compose -f docker-compose.dev.yml push ${service}"
+                    sh "docker logout"
+                }
+            }
+        }
+    }
+}

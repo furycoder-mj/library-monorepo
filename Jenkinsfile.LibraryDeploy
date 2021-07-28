@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+    stages {      
+        stage('Cloning git repo') {
+            steps{
+                git branch: 'main', credentialsId: 'personal_git_ssh', url: 'git@github.com:furycoder-mj/library-monorepo.git'
+            }
+        }
+        stage('Deploy service') {
+            steps{
+                script{
+                    sh "make start-dev service=${service}"
+                }
+            }
+        }
+    }
+}
