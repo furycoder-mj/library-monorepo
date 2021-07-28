@@ -12,9 +12,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub_id', passwordVariable: 'password', usernameVariable: 'username')]) {
                         sh "docker login -u ${username} -p ${password}"
                     }
-                    sh "docker-compose -f docker-compose.dev.yml build -q ${service}"
-                    sh "docker-compose -f docker-compose.dev.yml push ${service}"
-                    sh "docker logout"
+                    sh "make build-push service=${service}"
                 }
             }
         }
