@@ -1,43 +1,43 @@
 version: '3'
 services:
-  books_service_dev:
+  books_service:
     build:
       context: ./src/books_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_books_service
+    image: mihiratdocker/library_books_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
     #   - books_vol:/usr/src/app/
     networks:
       - monorepo_net
-  users_service_dev:
+  users_service:
     build:
       context: ./src/users_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_users_service
+    image: mihiratdocker/library_users_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
     #   - users_vol:/usr/src/app/
     networks:
       - monorepo_net
-  library_service_dev:
+  library_service:
     build:
       context: ./src/library_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_library_service
+    image: mihiratdocker/library_library_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
     #   - library_vol:/usr/src/app/
     networks:
       - monorepo_net
-  login_service_dev:
+  login_service:
     build:
       context: ./src/login_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_login_service
+    image: mihiratdocker/library_login_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
