@@ -43,91 +43,29 @@ pipeline {
                     testResult.each { service, testStatus ->
                         if (testStatus == 'SUCCESS'){
                             def pResult = build propagate: false, job: 'LibraryBuildAndPush',
-                                            parameters: [string(name: 'service-name', value: it)]
+                                            parameters: [string(name: 'service', value: service)]
                                                 pushResult.put(it, pResult.result)
-                            // step([$class: 'DockerBuilderPublisher', cleanImages: false, 
-                            //  cleanupWithJenkinsJobDelete: false, cloud: '',
-                            //  dockerFileDirectory: './src/users-service', fromRegistry: [],
-                            //  pushCredentialsId: 'dockerhub_id', pushOnSuccess: true, 
-                            //  tagsString: 'mihiratdocker/library_users_service:latest'])                      
-                            // registry = baseRegistry + service
-                            // dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                            // docker.withRegistry( '', registryCredential ) {
-                            //     dockerImage.push('latest')
-                            // } 
                         }
                     }
                     echo "${pushResult}"
                 }
             }
         }
-        // stage('Deploy services') {
-        //     steps{
-        //         script{
-        //             testResult.each { service, testStatus ->
-        //                 if (testStatus == 'SUCCESS'){                            
-        //                     // make deploy... 
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Deploy services') {
+            steps{
+                script{
+                    testResult.each { service, testStatus ->
+                        if (testStatus == 'SUCCESS'){                            
+                            sh "make start-dev service=${service}"
+                        }
+                    }
+                }
+            }
+        }
     }
     post {
         failure {
             sh 'make final-clean-test'           
         }
     }
-        // stage('Building our image') {
-        //     steps{
-        //         script{
-        //             dockerImage = docker.build registry + ":$BUILD_NUMBER" 
-        //         }
-        //     }
-        // }
-        // stage('Push our image') {
-        //     steps{
-        //         script{
-        //             docker.withRegistry( '', registryCredential ) {
-        //                 dockerImage.push('latest')
-        //             } 
-        //         }
-        //     }
-        // }
-        // stage('Deploy our image'){
-        //     steps{
-        //         sh 'docker container rm -f testDeployment'
-        //         script{
-        //             containerId = docker.image('mihiratdocker/jenkins_golang_hello_world_pipeline:6').run('-p 8001:8001 --name testDeployment')
-        //         }
-        //     }  
-        // }
-        // stage('Pre Test') {
-        //     steps {
-        //         echo 'Installing dependencies'
-        //         sh 'go version'
-        //         sh 'go get -u golang.org/x/lint/golint'
-        //     }
-        // }
-        
-        // stage('Build') {
-        //     steps {
-        //         echo 'Compiling and building'
-        //         sh 'go build'
-        //     }
-        // }
-
-        // stage('Test') {
-        //     steps {
-        //         withEnv(["PATH+GO=${GOPATH}/bin"]){
-        //             echo 'Running vetting'
-        //             sh 'go vet .'
-        //             echo 'Running linting'
-        //             sh 'golint .'
-        //             echo 'Running test'
-        //             sh 'cd test && go test -v'
-        //         }
-        //     }
-        // }
-    // }  
 }
