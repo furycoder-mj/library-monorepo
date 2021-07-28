@@ -2,9 +2,8 @@ version: '3'
 services:
   books_service_test:
     build:
-      context: ./src/books-service
+      context: ./src/books_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_books_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
@@ -13,9 +12,8 @@ services:
       - monorepo_net
   users_service_test:
     build:
-      context: ./src/users-service
+      context: ./src/users_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_users_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
@@ -24,9 +22,8 @@ services:
       - monorepo_net
   library_service_test:
     build:
-      context: ./src/library-service
+      context: ./src/library_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_library_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
@@ -35,9 +32,8 @@ services:
       - monorepo_net
   login_service_test:
     build:
-      context: ./src/login-service
+      context: ./src/login_service
       dockerfile: ./Dockerfile
-      image: mihiratdocker/library_login_service
     restart: on-failure
     command: /bin/sh -c 'while true; do sleep 1; done'
     # volumes:
