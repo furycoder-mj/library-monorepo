@@ -15,7 +15,7 @@ type BookId int64
 
 // Get Books http FuncHandler
 func getBooks(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hello")
+	fmt.Println("hello")
 	statusCode, booksList, err := proxy.GetBooks()
 	if err != nil {
 		fmt.Println(err)

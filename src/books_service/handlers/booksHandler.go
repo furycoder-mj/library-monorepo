@@ -15,7 +15,7 @@ import (
 var booksPath = os.Getenv("BasePath")
 
 func handleBooks(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hello")
+	fmt.Println("hello")
 	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
 	case http.MethodGet:
