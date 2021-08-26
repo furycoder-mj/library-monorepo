@@ -15,6 +15,9 @@ stop-dev: ## Stop docker container
 clean-dev: stop-dev ## Stop docker containers, clean data and workspace (test)
 	docker-compose -f docker-compose.dev.yml rm -f -s -v $(service)
 
+rmi-unused-images:
+	docker image prune -f
+
 final-clean-dev: ## Stop docker containers, clean data and workspace (test)
 	docker-compose -f docker-compose.dev.yml down -v --remove-orphans --rmi all
 
