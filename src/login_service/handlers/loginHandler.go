@@ -11,7 +11,6 @@ import (
 )
 
 func handleLogin(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hello")
 	if r.Method == http.MethodPost {
 		var userCredential models.UserCredential
 		err := json.NewDecoder(r.Body).Decode(&userCredential)
